@@ -22,9 +22,8 @@
 (defn- type-rank
   "Order across types so a mixed column still has a total order.
 
-  Missing values sort last in ascending order, which is what a file listing
-  wants: rows that have no size belong at the bottom, not at the top pushing
-  the real answers off screen."
+  Missing values rank last here, and `comparator-for` additionally keeps them
+  last under `:desc` — see the note there."
   [v]
   (cond
     (nil? v) 4
@@ -67,14 +66,28 @@
 
   The id tiebreak is appended unconditionally. It is not optional: without it
   two items with equal sort keys order by whatever the underlying collection
-  did, and the same query answers differently on JVM and on ClojureScript."
+  did, and the same query answers differently on JVM and on ClojureScript.
+
+  **Absent values are appended, not ranked, and this is direction-independent.**
+  Negating the whole comparison under `:desc` — the obvious implementation —
+  moves rows with no value to the *top*, which is the one place they must
+  never be: `fullest volume first` would lead with the volume whose capacity
+  could not be read, and `busiest process first` with the process whose CPU is
+  unknown. The direction orders the values that exist; the ones that do not
+  exist go last either way."
   [sort-spec]
   (fn [a b]
     (loop [[[k dir] & more] (seq sort-spec)]
       (if (nil? k)
         (compare (item/id-key a) (item/id-key b))
-        (let [c (compare-values (extract k a) (extract k b))
-              c (if (= :desc dir) (- c) c)]
+        (let [va (extract k a)
+              vb (extract k b)
+              c (cond
+                  (and (nil? va) (nil? vb)) 0
+                  (nil? va) 1
+                  (nil? vb) -1
+                  :else (let [c (compare-values va vb)]
+                          (if (= :desc dir) (- c) c)))]
           (if (zero? c) (recur more) c))))))
 
 ;; ----------------------------------------------------------------- filters

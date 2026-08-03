@@ -36,6 +36,23 @@
     (let [ids (query/ordered-ids (query/run items {:query/sort [[:size :asc]]} descriptor))]
       (is (= "d" (last ids)))))
 
+  (testing "and last descending too — absent is appended, not ranked"
+    ;; Negating the whole comparison under :desc moves valueless rows to the
+    ;; top, which is the one place they must never be: "fullest volume first"
+    ;; would lead with the volume whose capacity could not be read.
+    (let [ids (query/ordered-ids (query/run items {:query/sort [[:size :desc]]} descriptor))]
+      (is (= "d" (last ids)))
+      (is (= ["a" "b" "c" "d"] ids)
+          "the 20s (id-tiebroken), then 5, then the sizeless row")))
+
+  (testing "two absent values tie and fall through to the next sort key"
+    (let [pair [(item/item "z" :file "zeta" {})
+                (item/item "y" :file "yankee" {})]]
+      (is (= ["y" "z"] (query/ordered-ids
+                        (query/run pair {:query/sort [[:size :desc] [:label :asc]]}
+                                   descriptor)))
+          "neither has a size, so the label decides")))
+
   (testing "descending reverses the attribute; the id tiebreak stays ascending"
     ;; Deliberate: the tiebreak exists for determinism, not to mirror the
     ;; direction. Negating it too would mean the set of tied rows reorders
