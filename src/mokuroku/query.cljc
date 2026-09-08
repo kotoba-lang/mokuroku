@@ -14,7 +14,7 @@
      no attributes — each has a defined answer. An app browsing a live host
      source cannot afford a comparator that throws on the one row where the
      provider returned nil."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [mokuroku.item :as item]))
 
 ;; ---------------------------------------------------------------- ordering
@@ -37,7 +37,7 @@
   (cond
     (boolean? a) (compare a b)
     (number? a) (compare a b)
-    (string? a) (compare (str/lower-case a) (str/lower-case b))
+    (string? a) (compare (str/lower a) (str/lower b))
     (keyword? a) (compare (str (symbol a)) (str (symbol b)))
     :else (compare (pr-str a) (pr-str b))))
 
@@ -109,17 +109,17 @@
       :in (contains? (set v) x)
       :exists (if v (some? x) (nil? x))
       :matches (and (some? x)
-                    (str/includes? (str/lower-case (str x))
-                                   (str/lower-case (str v))))
+                    (str/includes? (str/lower (str x))
+                                   (str/lower (str v))))
       ;; An unknown operator excludes nothing. Silently dropping every row
       ;; because of a typo in a filter spec is worse than showing them all;
       ;; `problems` reports the typo.
       true)))
 
 (defn- matches-text? [text it]
-  (let [needle (str/lower-case (str/trim (str text)))]
+  (let [needle (str/lower (str/trim (str text)))]
     (or (str/blank? needle)
-        (boolean (some #(str/includes? (str/lower-case %) needle)
+        (boolean (some #(str/includes? (str/lower %) needle)
                        (item/searchable-text it))))))
 
 ;; ------------------------------------------------------------------ query
