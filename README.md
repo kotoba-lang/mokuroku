@@ -99,14 +99,14 @@ bounded profile can express.
 ## Test
 
 ```sh
-clojure -M:test          # 13 tests, 58 assertions
+kbb -M:test          # 13 tests, 58 assertions
 
 mkdir -p target/kotoba
-clojure -M:kotoba compile test/mokuroku/bounded_conformance.kotoba \
+kbb -M:kotoba compile test/mokuroku/bounded_conformance.kotoba \
   --source-path src --target js-browser --output target/kotoba/mokuroku.mjs
-clojure -M:kotoba compile test/mokuroku/bounded_conformance.kotoba \
+kbb -M:kotoba compile test/mokuroku/bounded_conformance.kotoba \
   --source-path src --target wasm32-browser --output target/kotoba/mokuroku.wasm
-compiler_src="$(clojure -Spath -M:kotoba | tr ':' '\n' | grep '/compiler/' | head -1)"
-nbb scripts/verify-kotoba.cljk target/kotoba/mokuroku.mjs \
+compiler_src="$(kbb -Spath -M:kotoba | tr ':' '\n' | grep '/compiler/' | head -1)"
+kbb --backend sci scripts/verify-kotoba.cljk target/kotoba/mokuroku.mjs \
   target/kotoba/mokuroku.wasm "$(dirname "$compiler_src")/runtime/browser-host.mjs"
 ```
