@@ -32,7 +32,7 @@ jobs:
         run: |
           compiler_src="$(clojure -Spath -M:kotoba | tr ':' '\n' | grep '/compiler/' | head -1)"
           test -n "$compiler_src"
-          nbb scripts/verify-kotoba.cljs target/kotoba/mokuroku.mjs \
+          nbb scripts/verify-kotoba.cljk target/kotoba/mokuroku.mjs \
             target/kotoba/mokuroku.wasm "$(dirname "$compiler_src")/runtime/browser-host.mjs"
 
   # `clojure -M:test` is the JVM. Every app in the suite renders under
@@ -53,4 +53,4 @@ jobs:
         with:
           node-version: '20'
       - run: npm install -g nbb
-      - run: nbb --classpath "$(clojure -Spath):src" scripts/verify-cljs.cljs
+      - run: nbb --classpath "$(clojure -Spath):src" scripts/verify-cljs.cljk
