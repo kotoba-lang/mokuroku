@@ -8,7 +8,7 @@
 ;; underlying collection's order answers one way on a JVM hash map and another
 ;; on a JS object.
 ;;
-;;   nbb --classpath "$(clojure -Spath):src" scripts/verify-cljs.cljs
+;;   nbb --classpath "$(clojure -Spath):src" scripts/verify-cljs.cljk
 
 (require '[mokuroku.catalog :as catalog]
          '[mokuroku.command :as command]
