@@ -1,14 +1,14 @@
-#!/usr/bin/env nbb
+#!/usr/bin/env kbb
 ;; verify-cljs.cljs — the same kernel, on the runtime the apps actually ship on.
 ;;
-;; `clojure -M:test` runs the JVM. Every app in the suite renders in a browser
+;; `kbb -M:test` runs the JVM. Every app in the suite renders in a browser
 ;; or under nbb, so the assertion that matters most here — that a query is
 ;; deterministic across runtimes — is exactly the one the JVM suite cannot
 ;; make. Sorting is where they would diverge: a comparator that leans on the
 ;; underlying collection's order answers one way on a JVM hash map and another
 ;; on a JS object.
 ;;
-;;   nbb --classpath "$(clojure -Spath):src" scripts/verify-cljs.cljk
+;;   kbb --backend sci --classpath "$(kbb -Spath):src" scripts/verify-cljs.cljk
 
 (require '[mokuroku.catalog :as catalog]
          '[mokuroku.command :as command]
