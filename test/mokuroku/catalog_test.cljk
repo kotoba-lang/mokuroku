@@ -1,5 +1,5 @@
 (ns mokuroku.catalog-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [mokuroku.catalog :as catalog]
             [mokuroku.command :as command]
             [mokuroku.item :as item]

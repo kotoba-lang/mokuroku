@@ -1,5 +1,5 @@
 (ns mokuroku.query-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [mokuroku.item :as item]
             [mokuroku.query :as query]
             [mokuroku.source :as source]))
