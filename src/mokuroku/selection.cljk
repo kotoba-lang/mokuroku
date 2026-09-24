@@ -7,7 +7,7 @@
   index-based selection silently retargets when that happens: the user selects
   row 3, the list re-sorts, and the delete lands on someone else. Ids make the
   failure mode 'the selection shrank', which is visible and safe."
-  (:require [clojure.set :as set]))
+  (:require [kotoba.lang.coll :as set]))
 
 (def empty-selection
   {:selection/ids #{}
