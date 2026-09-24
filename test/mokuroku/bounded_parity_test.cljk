@@ -33,7 +33,7 @@
   `selection-count` rather than by picking apart the returned record, so this
   test does not depend on how a `[:set :keyword]` happens to be represented at
   the host boundary."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.compiler.core :as compiler]
             ;; At this repo's compiler pin the interpreter is still inside the
             ;; compiler as `kotoba.compiler.ir`; it moved out to
